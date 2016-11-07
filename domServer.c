@@ -39,16 +39,10 @@ struct threadChild {
     struct threadChild *next;
 };
 
-void cleanupONsignal(void) {
-    sigset_t signals2catch;
+void cleanupONsignal(sigset_t *arg) {
+    sigset_t *signals2catch=arg;
     int caught;
-    sigemptyset(&signals2catch);
-    sigaddset(&signals2catch, SIGINT);
-    sigaddset(&signals2catch, SIGQUIT);
-    sigaddset(&signals2catch, SIGTERM);
-    sigaddset(&signals2catch, SIGUSR1);
-    sigaddset(&signals2catch, SIGUSR2);
-    sigwait(&signals2catch, &caught);
+    sigwait(signals2catch, &caught);
     xs_rm(xshandle, XBT_NULL, "/local/domain/0/xss");
     free(xshandle);
     if(xs_path != NULL)
@@ -251,7 +245,7 @@ int main(int argc, char **argv) {
             sigaddset(&signals2block, SIGUSR1);
             sigaddset(&signals2block, SIGUSR2);
             pthread_sigmask(SIG_BLOCK, &signals2block, NULL);
-            pthread_create(&cleanupThread, &attr, (void *)&cleanupONsignal, NULL);
+            pthread_create(&cleanupThread, &attr, (void *)&cleanupONsignal, (void *)&signals2block);
 #ifndef DEBUG_DRM
             fclose(stdout);
             fclose(stderr);

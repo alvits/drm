@@ -43,16 +43,10 @@ struct sockaddr_un name;
 int mounted = 1;
 #endif
 
-void cleanupONsignal(void) {
-    sigset_t signals2catch;
+void cleanupONsignal(sigset_t *arg) {
+    sigset_t *signals2catch=arg;
     int caught;
-    sigemptyset(&signals2catch);
-    sigaddset(&signals2catch, SIGINT);
-    sigaddset(&signals2catch, SIGQUIT);
-    sigaddset(&signals2catch, SIGTERM);
-    sigaddset(&signals2catch, SIGUSR1);
-    sigaddset(&signals2catch, SIGUSR2);
-    sigwait(&signals2catch, &caught);
+    sigwait(signals2catch, &caught);
 #ifndef STANDALONE
     char eot=EOT;
     drm_relay(&eot, 1);
@@ -227,7 +221,7 @@ int main(int argc, char **argv) {
             sigaddset(&signals2block, SIGUSR1);
             sigaddset(&signals2block, SIGUSR2);
             pthread_sigmask(SIG_BLOCK, &signals2block, NULL);
-            pthread_create(&cleanupThread, &attr, (void *)&cleanupONsignal, NULL);
+            pthread_create(&cleanupThread, &attr, (void *)&cleanupONsignal, (void *)&signals2block);
             setgid(script.st_gid);
             setuid(script.st_uid);
             fclose(stdout);

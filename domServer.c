@@ -250,7 +250,7 @@ int main(int argc, char **argv) {
             fclose(stdout);
             fclose(stderr);
             status=open("/dev/null", O_RDONLY);
-            dup2(status, 0);
+            dup2(status, fileno(stdin));
             close(status);
 #endif
             if((xshandle = XS_OPEN(0)) == NULL) {

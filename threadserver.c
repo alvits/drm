@@ -227,7 +227,7 @@ int main(int argc, char **argv) {
             fclose(stdout);
             fclose(stderr);
             status=open("/dev/null", O_RDONLY);
-            dup2(status, 0);
+            dup2(status, fileno(stdin));
             close(status);
             umask(0);
             mysock = make_named_socket(argv[1]);

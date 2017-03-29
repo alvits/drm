@@ -10,30 +10,46 @@ TESTDOMU := domU
 TESTCLIENT := testclient
 TESTPE := testpe
 TESTSERVER := threadserverd
+SRCDIR:=src
+OBJDIR:=obj
+EXEDIR:=exe
 
-all:	$(DOMSERVER) $(DOMCLIENT) $(TESTDOMU) $(TESTSERVER) $(TESTCLIENT) $(TESTPE)
+all:	$(EXEDIR)/$(DOMSERVER) $(EXEDIR)/$(DOMCLIENT) $(EXEDIR)/$(TESTDOMU) $(EXEDIR)/$(TESTSERVER) $(EXEDIR)/$(TESTCLIENT) $(EXEDIR)/$(TESTPE)
 
 clean:
-	rm -f *.o *.gc?? $(DOMSERVER) $(DOMCLIENT) $(TESTDOMU) $(TESTSERVER) $(TESTCLIENT) $(TESTPE)
+	rm -rf $(OBJDIR) *.gc?? $(EXEDIR)
 
 clean.obj:
-	rm -f *.o
+	rm -rf $(OBJDIR)
 
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-standalone.o: threadserver.c drm.h
+$(OBJDIR)/standalone.o: $(SRCDIR)/threadserver.c $(SRCDIR)/drm.h
+	@mkdir -p $(OBJDIR)
 	$(CC) -o $@ $(CFLAGS) -DSTANDALONE -c $<
 
-$(DOMCLIENT): xss.o domClient.o threadserver.o mntent.o
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/*.h
+	@mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(EXEDIR)/$(DOMCLIENT): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/threadserver.o $(OBJDIR)/mntent.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
-$(TESTSERVER): standalone.o
+
+$(EXEDIR)/$(TESTSERVER): $(OBJDIR)/standalone.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
-$(TESTDOMU): xss.o domClient.o testdomU.o mntent.o
+
+$(EXEDIR)/$(TESTDOMU): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/testdomU.o $(OBJDIR)/mntent.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
-$(DOMSERVER): xss.o domServer.o
+
+$(EXEDIR)/$(DOMSERVER): $(OBJDIR)/xss.o $(OBJDIR)/domServer.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
-$(TESTCLIENT): testclient.o
+
+$(EXEDIR)/$(TESTCLIENT): $(OBJDIR)/testclient.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
-$(TESTPE): testpe.o peClient.o
+
+$(EXEDIR)/$(TESTPE): $(OBJDIR)/testpe.o $(OBJDIR)/peClient.o
+	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^

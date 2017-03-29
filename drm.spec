@@ -16,20 +16,20 @@ This package contains dynamic resource management executables and test executabl
 %build
 %define debug_package %{nil}
 make clean
-make DOMSERVER=dom-serverd DOMCLIENT=dom-clientd dom-serverd dom-clientd
+make EXEDIR=exe DOMSERVER=dom-serverd DOMCLIENT=dom-clientd exe/dom-serverd exe/dom-clientd
 make clean.obj
-make TESTDOMU=domU TESTSERVER=threadserverd TESTCLIENT=testclient TESTPE=testpe DEBUG=-DDEBUG_DRM domU threadserverd testclient testpe
+make EXEDIR=exe TESTDOMU=domU TESTSERVER=threadserverd TESTCLIENT=testclient TESTPE=testpe DEBUG=-DDEBUG_DRM exe/domU exe/threadserverd exe/testclient exe/testpe
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/sbin
-install -m 755 dom-serverd %{buildroot}/usr/sbin
-install -m 755 dom-clientd %{buildroot}/usr/sbin
+install -m 755 exe/dom-serverd %{buildroot}/usr/sbin
+install -m 755 exe/dom-clientd %{buildroot}/usr/sbin
 mkdir -p %{buildroot}/usr/local/bin
-install -m 755 domU %{buildroot}/usr/local/bin
-install -m 755 threadserverd %{buildroot}/usr/local/bin
-install -m 755 testclient %{buildroot}/usr/local/bin
-install -m 755 testpe %{buildroot}/usr/local/bin
+install -m 755 exe/domU %{buildroot}/usr/local/bin
+install -m 755 exe/threadserverd %{buildroot}/usr/local/bin
+install -m 755 exe/testclient %{buildroot}/usr/local/bin
+install -m 755 exe/testpe %{buildroot}/usr/local/bin
 
 %clean
 rm -rf %{buildroot}
@@ -86,6 +86,9 @@ exit 1
 /usr/local/bin/testpe
 
 %changelog
+* Tue Mar 28 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+- Create separate obj, exe directories during build
+
 * Thu Jul 09 2015 Allan Vitangcol <allan.vitangcol@oracle.com>
 - Disabled useless debuginfo.
 

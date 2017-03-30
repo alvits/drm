@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# dom-clientd starts/stops the domU service
+#
+# chkconfig:   345 96 4
+# description: Starts and stops domU service to allow communication with dom0 via xenstore
+
+### BEGIN INIT INFO
+# Provides: dom-clientd
+# Required-Start: xenstored
+# Required-Stop:
+# Default-Start: 345
+# Default-Stop: 96
+# Short-Description: Starts and stops domU service to allow communication with dom0 via xenstore
+# Description: Starts and stops domU service to allow communication with dom0 via xenstore
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+. /etc/sysconfig/dom-clientd
+
+exec=/usr/sbin/dom-clientd
+
+start() {
+    [ -x $exec ] || exit 5
+    echo -n $"Starting ${exec##*/}: "
+    $exec ${SOCKET}
+    retval=$?
+    echo
+}
+
+stop() {
+    echo -n $"Stopping ${exec##*/}: "
+    $exec stop
+    retval=$?
+    echo
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
+}
+
+case "$1" in
+    start|stop|restart|reload)
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart|reload|force-reload}"
+        exit 2
+esac
+exit $?

@@ -1,0 +1,12 @@
+[Unit]
+Description=Dynamic Resource Management client daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dom-clientd ${SOCKET}
+ExecStop=/usr/sbin/dom-clientd stop
+PIDFile=/var/run/dom-clientd.pid
+
+[Install]
+WantedBy=multi-user.target

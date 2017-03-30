@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+# dom-serverd starts/stops the dom0 service
+#
+# chkconfig:   345 96 4
+# description: Starts and stops dom0 service to allow communication with domU via xenstore
+
+### BEGIN INIT INFO
+# Provides: dom-serverd
+# Required-Start: xenstored
+# Required-Stop:
+# Default-Start: 345
+# Default-Stop: 96
+# Short-Description: Starts and stops dom0 service to allow communication with domU via xenstore
+# Description: Starts and stops dom0 service to allow communication with domU via xenstore
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+exec=/usr/sbin/dom-serverd
+
+start() {
+    [ -x $exec ] || exit 5
+    echo -n $"Starting ${exec##*/}: "
+    $exec start
+    retval=$?
+    echo
+}
+
+stop() {
+    echo -n $"Stopping ${exec##*/}: "
+    $exec stop
+    retval=$?
+    echo
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
+}
+
+case "$1" in
+    start|stop|restart|reload)
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart|reload|force-reload}"
+        exit 2
+esac
+exit $?

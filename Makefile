@@ -13,6 +13,7 @@ TESTSERVER := threadserverd
 SRCDIR:=src
 OBJDIR:=obj
 EXEDIR:=exe
+TOPDIR:=$(shell rpmbuild --showrc|sed 's/^-14: _topdir\s*//p;d'|sed 's/%{getenv:\([^}]*\)}\(\/.*\)/$$\1\2/')
 
 all:	$(EXEDIR)/$(DOMSERVER) $(EXEDIR)/$(DOMCLIENT) $(EXEDIR)/$(TESTDOMU) $(EXEDIR)/$(TESTSERVER) $(EXEDIR)/$(TESTCLIENT) $(EXEDIR)/$(TESTPE)
 
@@ -53,3 +54,7 @@ $(EXEDIR)/$(TESTCLIENT): $(OBJDIR)/testclient.o
 $(EXEDIR)/$(TESTPE): $(OBJDIR)/testpe.o $(OBJDIR)/peClient.o
 	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
+
+package:
+	tar czf $(TOPDIR)/SOURCES/drm-1.tgz *
+	rpmbuild --sign -ba drm.spec

@@ -17,6 +17,7 @@ This package contains dynamic resource management executables and test executabl
 %define debug_package %{nil}
 make EXEDIR=exe clean
 make EXEDIR=exe DOMSERVER=dom-serverd DOMCLIENT=dom-clientd exe/dom-serverd exe/dom-clientd
+make EXEDIR=exe clean.obj
 make EXEDIR=exe TESTDOMU=domU TESTSERVER=threadserverd TESTCLIENT=testclient TESTPE=testpe DEBUG=-DDEBUG_DRM exe/domU exe/threadserverd exe/testclient exe/testpe
 
 %install
@@ -162,6 +163,9 @@ exit 1
 /usr/local/bin/testpe
 
 %changelog
+* Tue Apr 04 2017 Allan Vitangcol <allan.vitangcol@oracle,com>
+- Add target package in makefile.
+
 * Thu Mar 30 2017 Allan Vitangcol <allan.vitangcol@oracle,com>
 - Streamline Makefile and spec file.
 - Added init scripts for sysV and service files for systemd.

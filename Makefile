@@ -13,7 +13,8 @@ TESTSERVER := threadserverd
 SRCDIR:=src
 OBJDIR:=obj
 EXEDIR:=exe
-TOPDIR:=$(shell rpmbuild --showrc|sed 's/^-14: _topdir\s*//p;d'|sed 's/%{getenv:\([^}]*\)}\(\/.*\)/$$\1\2/')
+TOPDIR:=$(shell rpmbuild --showrc|sed 's/^-14: _topdir\s*//p;d'|sed 's/%{getenv:\([^}]*\)}\(\/.*\)/$${\1}\2/')
+SIGN:=$(shell rpm --showrc | grep -q '^-14: _gpg_name' && [ -d ${HOME}/.gnupg ] && [ -n "$$(gpg --list-keys 2>/dev/null)" ] && echo --sign)
 
 all:	$(EXEDIR)/$(DOMSERVER) $(EXEDIR)/$(DOMCLIENT) $(EXEDIR)/$(TESTDOMU) $(EXEDIR)/$(TESTSERVER) $(EXEDIR)/$(TESTCLIENT) $(EXEDIR)/$(TESTPE)
 
@@ -55,6 +56,9 @@ $(EXEDIR)/$(TESTPE): $(OBJDIR)/testpe.o $(OBJDIR)/peClient.o
 	@mkdir -p $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
 
-package:
-	tar czf $(TOPDIR)/SOURCES/drm-1.tgz *
-	rpmbuild --sign -ba drm.spec
+$(TOPDIR)/SOURCES/drm-1.tgz: *
+	@mkdir -p $(TOPDIR)/SOURCES
+	@tar czf $@ $^
+
+package: $(TOPDIR)/SOURCES/drm-1.tgz
+	@rpmbuild $(SIGN) -ba drm.spec

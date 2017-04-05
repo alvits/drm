@@ -163,10 +163,13 @@ exit 1
 /usr/local/bin/testpe
 
 %changelog
-* Tue Apr 04 2017 Allan Vitangcol <allan.vitangcol@oracle,com>
+* Wed Apr 05 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+- Detect presence of gpg key and automatically sign packages if _gpg_name is defined in rpm macros.
+
+* Tue Apr 04 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
 - Add target package in makefile.
 
-* Thu Mar 30 2017 Allan Vitangcol <allan.vitangcol@oracle,com>
+* Thu Mar 30 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
 - Streamline Makefile and spec file.
 - Added init scripts for sysV and service files for systemd.
 

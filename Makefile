@@ -13,8 +13,8 @@ TESTSERVER := threadserverd
 SRCDIR:=src
 OBJDIR:=obj
 EXEDIR:=exe
-TOPDIR:=$(shell rpmbuild --showrc|sed 's/^-14: _topdir\s*//p;d'|sed 's/%{getenv:\([^}]*\)}\(\/.*\)/$${\1}\2/')
-SIGN:=$(shell rpm --showrc | grep -q '^-14: _gpg_name' && [ -d ${HOME}/.gnupg ] && [ -n "$$(gpg --list-keys 2>/dev/null)" ] && echo --sign)
+TOPDIR:=$(shell rpm --eval '%_topdir')
+SIGN:=$(shell (rpm --eval '%_gpg_name' | grep -q '%_gpg_name') || ([ -d ${HOME}/.gnupg ] && [ -n "$$(gpg --list-keys 2>/dev/null)" ] && echo --sign))
 
 ifndef XENVERSION
     $(error xen-devel package is not installed)

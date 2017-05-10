@@ -2,6 +2,8 @@ Name:		drm
 Version:	1
 Release:	1.2.1%{?dist}
 Summary:	Dynamic Resource Management
+Group:		System Environment/Daemons
+BuildRequires:	xen-devel
 
 License:	Allan Vitangcol
 Source0:	drm-%{version}.tgz
@@ -163,27 +165,30 @@ exit 1
 /usr/local/bin/testpe
 
 %changelog
-* Wed Apr 05 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Tue May 09 2017 Allan Vitangcol <alvits@gmail.com
+- Add build requires
+
+* Wed Apr 05 2017 Allan Vitangcol <alvits@gmail.com>
 - Detect presence of gpg key and automatically sign packages if _gpg_name is defined in rpm macros.
 
-* Tue Apr 04 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Tue Apr 04 2017 Allan Vitangcol <alvits@gmail.com>
 - Add target package in makefile.
 
-* Thu Mar 30 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Thu Mar 30 2017 Allan Vitangcol <alvits@gmail.com>
 - Streamline Makefile and spec file.
 - Added init scripts for sysV and service files for systemd.
 
-* Tue Mar 28 2017 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Tue Mar 28 2017 Allan Vitangcol <alvits@gmail.com>
 - Create separate obj, exe directories during build
 
-* Thu Jul 09 2015 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Thu Jul 09 2015 Allan Vitangcol <alvits@gmail.com>
 - Disabled useless debuginfo.
 
-* Tue Jul 07 2015 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Tue Jul 07 2015 Allan Vitangcol <alvits@gmail.com>
 - Added preinstall script to avoid spoofed /boot/xen.gz.
 
-* Mon Jun 29 2015 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Mon Jun 29 2015 Allan Vitangcol <alvits@gmail.com>
 - Added test tools.
 
-* Fri Jun 26 2015 Allan Vitangcol <allan.vitangcol@oracle.com>
+* Fri Jun 26 2015 Allan Vitangcol <alvits@gmail.com>
 - First version.

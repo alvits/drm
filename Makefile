@@ -29,37 +29,37 @@ clean.obj:
 	rm -rf $(OBJDIR)
 
 $(OBJDIR):
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $@
 
 $(EXEDIR):
-	@mkdir -p $(EXEDIR)
+	@mkdir -p $@
 
-$(OBJDIR)/standalone.o: $(SRCDIR)/threadserver.c $(SRCDIR)/drm.h |$(OBJDIR)
+$(OBJDIR)/standalone.o: $(SRCDIR)/threadserver.c $(SRCDIR)/drm.h | $(OBJDIR)
 	$(CC) -o $@ $(CFLAGS) -DSTANDALONE -c $<
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/*.h |$(OBJDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/*.h | $(OBJDIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(EXEDIR)/$(DOMCLIENT): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/threadserver.o $(OBJDIR)/mntent.o |$(EXEDIR)
+$(EXEDIR)/$(DOMCLIENT): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/threadserver.o $(OBJDIR)/mntent.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
 
-$(EXEDIR)/$(TESTSERVER): $(OBJDIR)/standalone.o |$(EXEDIR)
+$(EXEDIR)/$(TESTSERVER): $(OBJDIR)/standalone.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
 
-$(EXEDIR)/$(TESTDOMU): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/testdomU.o $(OBJDIR)/mntent.o |$(EXEDIR)
+$(EXEDIR)/$(TESTDOMU): $(OBJDIR)/xss.o $(OBJDIR)/domClient.o $(OBJDIR)/testdomU.o $(OBJDIR)/mntent.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
 
-$(EXEDIR)/$(DOMSERVER): $(OBJDIR)/xss.o $(OBJDIR)/domServer.o |$(EXEDIR)
+$(EXEDIR)/$(DOMSERVER): $(OBJDIR)/xss.o $(OBJDIR)/domServer.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) -lxenstore $^
 
-$(EXEDIR)/$(TESTCLIENT): $(OBJDIR)/testclient.o |$(EXEDIR)
+$(EXEDIR)/$(TESTCLIENT): $(OBJDIR)/testclient.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
 
-$(EXEDIR)/$(TESTPE): $(OBJDIR)/testpe.o $(OBJDIR)/peClient.o |$(EXEDIR)
+$(EXEDIR)/$(TESTPE): $(OBJDIR)/testpe.o $(OBJDIR)/peClient.o | $(EXEDIR)
 	$(CC) -o $@ $(LDFLAGS) $^
 
 $(TOPDIR)/SOURCES/drm-1.tgz: *
-	@mkdir -p $(TOPDIR)/SOURCES
+	@mkdir -p $(@D)
 	@tar czf $@ $^
 
 package: $(TOPDIR)/SOURCES/drm-1.tgz

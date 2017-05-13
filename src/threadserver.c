@@ -53,14 +53,12 @@ void cleanupONsignal(sigset_t *arg) {
     if(mounted == 0 )
         umount("/proc/xen");
 #endif
-    unlink(name.sun_path);
     closelog();
     exit(caught);
 }
 
 int make_named_socket (const char *const filename) {
     int sock;
-    struct stat *sockfile;
 
     /* Create the socket. */
 
@@ -76,20 +74,7 @@ int make_named_socket (const char *const filename) {
     /* Bind a name to the socket. */
 
     name.sun_family = PF_UNIX;
-    strncpy (name.sun_path, filename, sizeof(name.sun_path) - 1);
-
-    sockfile = malloc(sizeof(struct stat));
-    if(stat(name.sun_path, sockfile) == 0) {
-        if(connect(sock, (struct sockaddr *) &name, sizeof(struct sockaddr_un)) == 0) {
-            free(sockfile);
-            syslog(LOG_ERR, "Socket %s in use", name.sun_path);
-            closelog();
-            exit (2);
-        }
-        unlink(name.sun_path);
-    }
-
-    free(sockfile);
+    strncpy (name.sun_path + 1, filename, sizeof(name.sun_path) - 2);
 
     if (bind (sock, (struct sockaddr *) &name, sizeof(struct sockaddr_un)) < 0) {
         syslog(LOG_ERR, strerror(errno));

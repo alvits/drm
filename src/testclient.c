@@ -44,7 +44,7 @@ int make_named_socket (const char *filename) {
   /* Bind a name to the socket. */
 
   name.sun_family = PF_UNIX;
-  strncpy (name.sun_path, filename, sizeof(name.sun_path) - 1);
+  strncpy (name.sun_path + 1, filename, sizeof(name.sun_path) - 2);
 
   if(connect(sock, (struct sockaddr *) &name, sizeof(struct sockaddr_un)) != 0)
     {
